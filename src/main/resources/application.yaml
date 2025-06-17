@@ -1,5 +1,5 @@
 server:
-  port: 9000
+  port: 8080
 
 # Optional commented out H2 configuration
 spring:
@@ -19,7 +19,7 @@ spring:
 jwt:
   secret: your_jwt_secret_key
   expiration:  36000000 # Example: 10 hours in milliseconds
-  # 20000 # Example: 20 seconds
+#  expiration: 20000 # Example: 20 seconds
 
 
 
