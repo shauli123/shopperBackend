@@ -39,10 +39,10 @@ public class ItemRepository {
         }
     }
 
-    public String reduceStock(int id) {
+    public String reduceStock(int id, int amount) {
         try {
-            String sql = String.format("UPDATE %s SET stock = stock - 1 WHERE id = ?", ITEMS_TABLE);
-            jdbcTemplate.update(sql, id);
+            String sql = String.format("UPDATE %s SET stock = stock - ? WHERE id = ?", ITEMS_TABLE);
+            jdbcTemplate.update(sql, amount,id);
             return "Stock updated successfully";
         } catch (Exception e) {
             return "Error updating stock";
@@ -78,6 +78,17 @@ public class ItemRepository {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return "Error removing item from favorites";
+        }
+    }
+
+    public String deleteAllFavItems(String username) {
+        try {
+            String sql = String.format("DELETE FROM %s WHERE user_username = ?", FAV_ITEMS_TABLE);
+            jdbcTemplate.update(sql, username);
+            return "All items removed from favorites successfully";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "Error removing items from favorites";
         }
     }
 

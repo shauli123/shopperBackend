@@ -2,6 +2,8 @@ package com.example.shopperBackend.service;
 
 import com.example.shopperBackend.model.CustomUser;
 import com.example.shopperBackend.model.Role;
+import com.example.shopperBackend.repository.ItemRepository;
+import com.example.shopperBackend.repository.OrderRepository;
 import com.example.shopperBackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +16,12 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -60,7 +68,11 @@ public class UserService {
         if (registeredUser == null) {
             return "The user with this username does not exist, so it cannot be deleted";
         }
-        return userRepository.deleteUser(registeredUser.getUsername());
+
+        String result = userRepository.deleteUser(registeredUser.getUsername());
+        orderRepository.deleteAllOrdersAndOrderItems(username);
+        itemRepository.deleteAllFavItems(username);
+        return result;
     }
 
 }
