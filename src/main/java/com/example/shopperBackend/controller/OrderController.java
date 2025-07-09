@@ -88,11 +88,11 @@ public class OrderController {
 
     @PreAuthorize("authenticated")
     @GetMapping
-    public ResponseEntity<List<Order>> getOrders(@RequestHeader(value = "Authorization") String token) {
+    public ResponseEntity<List<OrderData>> getOrders(@RequestHeader(value = "Authorization") String token) {
         try {
             String jwtToken = token.substring(7);
             String username = jwtUtil.extractUsername(jwtToken);
-            List<Order> orders = orderService.getOrders(username);
+            List<OrderData> orders = orderService.getOrders(username);
             return new ResponseEntity<>(orders, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

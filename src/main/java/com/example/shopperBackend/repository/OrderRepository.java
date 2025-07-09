@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -98,17 +99,35 @@ public class OrderRepository {
         }
     }
 
-    public List<Order> getOrders(String username) {
+//    public List<Order> getOrders(String username) {
+//        try {
+//            String sql = String.format("SELECT * FROM %s WHERE user_username = ?", ORDERS_TABLE);
+//            List<Order> orders = jdbcTemplate.query(sql, new OrderMapper(), username);
+//            return orders;
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            return null;
+//        }
+//    }
+    public List<OrderData> getOrders(String username) {
         try {
             String sql = String.format("SELECT * FROM %s WHERE user_username = ?", ORDERS_TABLE);
             List<Order> orders = jdbcTemplate.query(sql, new OrderMapper(), username);
-            return orders;
+
+            List<OrderData> orderDataList = new ArrayList<>();
+            String itemSql = String.format("SELECT * FROM %s WHERE order_id = ?", ORDER_ITEMS_TABLE);
+
+            for (Order order : orders) {
+                List<OrderItem> orderItems = jdbcTemplate.query(itemSql, new OrderItemMapper(), order.getId());
+                orderDataList.add(new OrderData(order, orderItems));
+            }
+
+            return orderDataList;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }
     }
-
     public String deleteOrderItem(Item item, String username) {
         try {
             String sql = String.format("SELECT * FROM %s WHERE user_username = ? AND status = 'TEMP'", ORDERS_TABLE);
