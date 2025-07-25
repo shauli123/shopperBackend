@@ -42,11 +42,11 @@ public class OrderController {
 
     @PreAuthorize("authenticated")
     @DeleteMapping
-    public ResponseEntity<String> deleteOrderItem(@RequestHeader(value = "Authorization") String token, @RequestBody Item item) {
+    public ResponseEntity<String> deleteOrderItem(@RequestHeader(value = "Authorization") String token, @RequestParam int itemId) {
         try {
             String jwtToken = token.substring(7);
             String username = jwtUtil.extractUsername(jwtToken);
-            String result = orderService.deleteOrderItem(item, username);
+            String result = orderService.deleteOrderItem(itemId, username);
             if (result.contains("successfully")) {
                 return new ResponseEntity<>(result, HttpStatus.OK);
             }

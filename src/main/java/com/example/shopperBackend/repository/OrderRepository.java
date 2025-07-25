@@ -128,20 +128,20 @@ public class OrderRepository {
             return null;
         }
     }
-    public String deleteOrderItem(Item item, String username) {
+    public String deleteOrderItem(int itemId, String username) {
         try {
             String sql = String.format("SELECT * FROM %s WHERE user_username = ? AND status = 'TEMP'", ORDERS_TABLE);
             Order order = jdbcTemplate.queryForObject(sql, new OrderMapper(), username);
 
             sql = String.format("SELECT * FROM %s WHERE order_id = ? AND item_id = ?", ORDER_ITEMS_TABLE);
-            OrderItem orderItem = jdbcTemplate.queryForObject(sql, new OrderItemMapper(), order.getId(), item.getId());
+            OrderItem orderItem = jdbcTemplate.queryForObject(sql, new OrderItemMapper(), order.getId(), itemId);
 
             if (orderItem.getAmount() <= 1) {
                 sql = String.format("DELETE FROM %s WHERE order_id = ? AND item_id = ?", ORDER_ITEMS_TABLE);
-                jdbcTemplate.update(sql, order.getId(), item.getId());
+                jdbcTemplate.update(sql, order.getId(), itemId);
             } else {
                 sql = String.format("UPDATE %s SET amount = amount - 1 WHERE order_id = ? AND item_id = ?", ORDER_ITEMS_TABLE);
-                jdbcTemplate.update(sql, order.getId(), item.getId());
+                jdbcTemplate.update(sql, order.getId(), itemId);
             }
             sql = String.format("SELECT * FROM %s WHERE order_id = ?", ORDER_ITEMS_TABLE);
             List<OrderItem> orderItems = jdbcTemplate.query(sql, new OrderItemMapper(), order.getId());

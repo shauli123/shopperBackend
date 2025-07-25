@@ -25,9 +25,9 @@ public class OrderService {
        return orderRepository.addItemsToOrder(item, username);
    }
 
-   public String deleteOrderItem(Item item, String username) {
-       if(item == null) return "Send an item in order to delete it from the order";
-       return orderRepository.deleteOrderItem(item, username);
+   public String deleteOrderItem(int itemId, String username) {
+//       if(itemId == null) return "Send an item in order to delete it from the order";
+       return orderRepository.deleteOrderItem(itemId, username);
    }
 
    public String closeOrder(String username) {
