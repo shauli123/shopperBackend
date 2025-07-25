@@ -68,10 +68,13 @@ public class UserService {
         if (registeredUser == null) {
             return "The user with this username does not exist, so it cannot be deleted";
         }
-
+        System.out.println("before deleted user" + registeredUser);
         String result = userRepository.deleteUser(registeredUser.getUsername());
+        System.out.println("deleted user");
         orderRepository.deleteAllOrdersAndOrderItems(username);
         itemRepository.deleteAllFavItems(username);
+        System.out.println("deleted user items & favs");
+
         return result;
     }
 
